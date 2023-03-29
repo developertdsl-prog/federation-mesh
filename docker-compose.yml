@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  gateway:
+    build: .
+    container_name: federation-mesh-gateway
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/federation_mesh
+      - API_KEY=mesh-supergraph-secret-key-2023
+      - MAX_QUERY_DEPTH=8
+      - MAX_QUERY_COMPLEXITY=250
+    depends_on:
+      - mongo
+    restart: always
+
+  mongo:
+    image: mongo:6.0
+    container_name: federation-mesh-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+volumes:
+  mongo_data:
